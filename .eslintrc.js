@@ -24,6 +24,9 @@ module.exports = {
   },
   // add your custom rules here
   'rules': {
+    "indent": [2, 4],
+    "semi": [2, "never"],
+    "import/prefer-default-export": ["off"],
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       'js': 'never',
