@@ -12,28 +12,28 @@
             <div class="field">
               <div class="ui left icon input">
                 <i class="user icon"></i>
-                <input type="text" name="name" placeholder="Enter your name" v-model.trim="name">
+                <input type="text" name="name" placeholder="Enter your name" v-model.trim="name" required>
               </div>
             </div>
 
             <div class="field">
               <div class="ui left icon input">
                 <i class="user icon"></i>
-                <input type="email" name="email" placeholder="Enter your email" v-model.trim="email">
+                <input type="email" name="email" placeholder="Enter your email" v-model.trim="email" required>
               </div>
             </div>
 
             <div class="field">
               <div class="ui left icon input">
                 <i class="lock icon"></i>
-                <input type="password" name="password" placeholder="Password" v-model="password">
+                <input type="password" name="password" placeholder="Password" v-model.trim="password" required>
               </div>
             </div>
 
             <div class="field">
               <div class="ui left icon input">
                 <i class="lock icon"></i>
-                <input type="password" name="password_confirmation" placeholder="Password Confirmation" v-model="password_confirmation">
+                <input type="password" name="password_confirmation" placeholder="Password Confirmation" v-model.trim="password_confirmation" required>
               </div>
             </div>
 
@@ -77,15 +77,12 @@ export default {
     },
     methods: {
         register() {
-            console.log('Register Click')
             this.errors = []
 
             if (this.isFormValid()) {
                 this.isLoading = true
                 firebaseObj.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then((user) => {
-                    console.log(`Register successfully  ${user.email}`)
-
                     user.updateProfile({
                         displayName: this.name,
                         photoURL: 'http://www.gravatar.com/avatar/' + md5(user.email) + '?id=identicon'
