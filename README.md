@@ -1,8 +1,39 @@
-# slackclone
+# Slack Clone real time VueJS
 
-> Slack Clone Using VueJS and Firebase
+> Slack clone real time Using VueJS and Firebase
+
+# Technology
+- VueJS
+- Firebase
+- SemanticUI
+- Gravatar
 
 ## Build Setup
+
+- Open `src/config/firebaseConfig.js` and change `const config` to your project's configuration
+
+- Change Database rules in firebase to
+
+```json
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name', 'avatar'])",
+          "name": {
+            ".validate": "newData.val().length > 0"
+          },
+          "avatar": {
+            ".validate": "newData.val().length > 0"
+          }
+      }
+    }
+  }
+}
+```
+
 
 ``` bash
 # install dependencies
@@ -17,5 +48,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
