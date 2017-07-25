@@ -17,6 +17,19 @@
 ```json
 {
   "rules": {
+    "channels": {
+      ".read": "auth != null",
+      "$channelId": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['id', 'name'])",
+        "name": {
+          ".validate": "newData.val().length > 0"
+        },
+          "id": {
+            ".validate": "newData.val() === $channelId"
+          }
+      }
+    },
     "users": {
       "$uid": {
         ".read": "auth != null",

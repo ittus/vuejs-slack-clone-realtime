@@ -2,15 +2,17 @@
     <div class="sidebar">
         <h1 class="ui inverted center aligned header">Slack Demo</h1>
         <connected-user></connected-user>
+        <channels></channels>
     </div>
 </template>
 
 <script>
 import ConnectedUser from './sidebar/ConnectedUser'
+import Channels from './sidebar/Channels'
 
 export default {
     name: 'sidebar',
-    components: { ConnectedUser }
+    components: { ConnectedUser, Channels }
 }
 </script>
 
