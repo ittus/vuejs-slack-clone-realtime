@@ -3,7 +3,13 @@
         <h2 class="ui inverted center aligned header"> Channels <i class="add square icon add_channel" @click="openChannelModal"></i></h2>
         <div class="ui raised padded segment channels__list">
             <ul>
-                <li class="channels__item">Vue.js </li>
+                <li class="channels__item"
+                    v-for="channel in channels"
+                    :key="channel.id"
+                    :class="{'is_active': setChannelActive(channel)}"
+                    @click="changeChannel(channel)">
+                    # {{ channel.name }}
+                </li>
             </ul>
         </div>
 
@@ -43,6 +49,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { firebaseObj } from '../../config/firebaseConfig'
 
 export default {
@@ -52,15 +59,31 @@ export default {
             new_channel: '',
             errors: [],
             channelsRef: firebaseObj.database().ref('channels'),
-            channels: []
+            channels: [],
+            firstLoad: true
         }
     },
     computed: {
+        ...mapGetters(['currentChannel']),
         hasErrors() {
             return this.errors.length > 0
         }
     },
+    mounted() {
+        this.addListeners()
+    },
     methods: {
+        addListeners() {
+            this.channelsRef.on('child_added', (snap) => {
+                this.channels.push(snap.val())
+
+                if (this.firstLoad && this.channels.length > 0) {
+                    this.$store.dispatch('setCurrentChannel', this.channels[0])
+                }
+
+                this.firstLoad = false
+            })
+        },
         openChannelModal() {
             /* global $ */
             /* eslint no-undef: "error" */
@@ -78,7 +101,19 @@ export default {
             }).catch((error) => {
                 this.errors.push(error.message)
             })
+        },
+        changeChannel(channel) {
+            this.$store.dispatch('setCurrentChannel', channel)
+        },
+        detachListeners() {
+            this.channelsRef.off()
+        },
+        setChannelActive(channel) {
+            return channel.id === this.currentChannel.id
         }
+    },
+    beforeDestroy() {
+        this.detachListeners()
     }
 }
 </script>
