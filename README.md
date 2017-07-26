@@ -30,6 +30,25 @@
           }
       }
     },
+    "messages": {
+      "$channelId": {
+        ".read": "auth != null",
+        ".validate": "root.child('channels/' + $channelId).exists()",
+        "$messageId": {
+          	".write": "auth != null",
+            ".validate": "newData.hasChildren(['content', 'user', 'timestamp'])",
+            "content": {
+              ".validate": "newData.val().length > 0"
+            },
+              "user": {
+                ".validate": "newData.hasChildren(['name', 'avatar', 'id'])",
+                  "id": {
+                    ".validate": "newData.val() === auth.uid"
+                  }
+              }
+        }
+      }
+    },
     "users": {
       "$uid": {
         ".read": "auth != null",
