@@ -49,6 +49,26 @@
         }
       }
     },
+    "privateMessages": {
+      "$uid1": {
+        "$uid2": {
+          ".read": "auth != null && ($uid1 === auth.uid || $uid2 === auth.uid)",
+          "$messageId": {
+            ".write": "auth != null && newData.child('user/id').val() === auth.uid",
+            ".validate": "$uid1 < $uid2 && newData.hasChildren(['content', 'user', 'timestamp'])",
+             "content": {
+              ".validate": "newData.val().length > 0"
+            },
+            "user": {
+              ".validate": "newData.hasChildren(['name', 'avatar', 'id'])",
+                "id": {
+                  ".validate": "newData.val() === auth.uid"
+                }
+            }
+          }
+        }
+      }
+    },
     "presence": {
       ".read": "auth != null",
       ".write": "auth != null"

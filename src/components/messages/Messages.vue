@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="messages__container">
         <div class="messages__content">
-            <h2 class="ui inverted center aligned header"># Welcome to new channel</h2>
+            <h2 class="ui inverted center aligned header">{{ channelName }}</h2>
             <div class="ui segment">
                 <div class="ui comments">
                     <!--  Single message -->
@@ -29,19 +29,26 @@ export default {
     data() {
         return {
             messagesRef: firebaseObj.database().ref('messages'),
+            privateMessagesRef: firebaseObj.database().ref('privateMessages'),
             messages: [],
-            channel: null
+            channel: null,
+            listeners: []
         }
     },
     computed: {
-        ...mapGetters(['currentChannel', 'currentUser'])
+        ...mapGetters(['currentChannel', 'currentUser', 'isPrivate']),
+        channelName() {
+            if (this.channel !== null) {
+                return this.isPrivate ? '@' + this.channel.name : '#' + this.channel.name
+            }
+            return 'unknown'
+        }
     },
     mounted() {
         this.addListeners()
     },
     watch: {
         currentChannel() {
-            this.messages = []
             this.detachListeners()
             this.addListeners()
 
@@ -50,18 +57,52 @@ export default {
     },
     methods: {
         addListeners() {
+            const ref = this.getMessageRef()
             if (this.currentChannel != null) {
-                this.messagesRef.child(this.currentChannel.id).on('child_added', (snap) => {
+                ref.child(this.currentChannel.id).on('child_added', (snap) => {
                     const message = snap.val()
                     message.id = snap.key
                     this.messages.push(message)
+
+                    this.$nextTick(() => {
+                        /* global $ */
+                        /* eslint no-undef: "error" */
+                        $('html, body').scrollTop($(document).height())
+                    })
+                })
+
+                this.addToListeners(this.currentChannel.id, ref, 'child_added')
+            }
+        },
+        addToListeners(id, ref, event) {
+            const index = this.listeners.findIndex(el => el.id === id &&
+                    el.ref === ref && el.event === event)
+            if (index === -1) {
+                this.listeners.push({
+                    id,
+                    ref,
+                    event
                 })
             }
         },
         detachListeners() {
-            if (this.channel !== null) {
-                this.messagesRef.child(this.channel.id).off('child_added')
+            this.listeners.forEach((listener) => {
+                listener.ref.child(listener.id).off(listener.event)
+            })
+
+            this.listeners = []
+            this.messages = []
+            // const ref = this.getMessageRef()
+            // if (this.channel !== null) {
+            //     ref.child(this.channel.id).off('child_added')
+            // }
+        },
+        getMessageRef() {
+            console.log('isPrivate', this.isPrivate)
+            if (this.isPrivate) {
+                return this.privateMessagesRef
             }
+            return this.messagesRef
         }
 
     },
