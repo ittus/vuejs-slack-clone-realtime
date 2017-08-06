@@ -49,7 +49,12 @@
         }
       }
     },
+    "presence": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "users": {
+      ".read": "auth != null",
       "$uid": {
         ".read": "auth != null",
         ".write": "auth != null && auth.uid === $uid",

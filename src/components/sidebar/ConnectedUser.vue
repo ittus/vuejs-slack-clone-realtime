@@ -28,11 +28,17 @@ import { firebaseObj } from '../../config/firebaseConfig'
 
 export default {
     name: 'connected-user',
+    data() {
+        return {
+            presenceRef: firebaseObj.database().ref('presence')
+        }
+    },
     computed: {
         ...mapGetters(['currentUser'])
     },
     methods: {
         logout() {
+            this.presenceRef.child(this.currentUser.uid).remove()
             firebaseObj.auth().signOut()
             this.$store.dispatch('setUser', null)
             this.$router.push('/login')
