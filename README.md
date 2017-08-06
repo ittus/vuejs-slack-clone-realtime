@@ -71,6 +71,26 @@
 }
 ```
 
+- Create folder `tchat` in firebase storage
+Change storage rules in firebase to:
+```
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /tchat {
+    	match /public/{imagePath=**} {
+      	allow read: if request.auth != null;
+        allow write: if request.auth != null;
+      }
+
+      match /private/{user1}/{user2}/{imagePath=**} {
+      	allow read: if request.auth != null;
+        allow write: if request.auth != null;
+      }
+    }
+  }
+}
+```
+
 
 ``` bash
 # install dependencies

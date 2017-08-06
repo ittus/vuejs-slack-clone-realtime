@@ -11,27 +11,49 @@
 
               <div class="field">
                   <button class="ui green button" @click.prevent="sendMessage">Send</button>
-                  <button class="ui labeled icon button"><i class="cloud upload icon"></i>Upload</button>
+                  <button class="ui labeled icon button" @click.prevent="openFileModal">
+                      <i class="cloud upload icon"></i>Upload
+                  </button>
               </div>
           </div>
       </div>
+
+      <!--  Process bar upload file -->
+      <div class="ui small orange inverted progress" data-total="100" id="uploadedFile">
+          <div class="bar">
+              <div class="progress">
+
+              </div>
+          </div>
+          <div class="label">
+          </div>
+      </div>
+      <file-modal></file-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import uuidV4 from 'uuid'
 import { firebaseObj } from '../../config/firebaseConfig'
+import FileModal from './FileModal'
 
 export default {
     name: 'message-form',
+    components: {
+        FileModal
+    },
     data() {
         return {
             message: '',
-            errors: []
+            errors: [],
+            storageRef: firebaseObj.storage().ref(),
+            uploadtask: null,
+            uploadState: null
         }
     },
     computed: {
-        ...mapGetters(['currentChannel', 'currentUser'])
+        ...mapGetters(['currentChannel', 'currentUser', 'isPrivate'])
     },
     methods: {
         sendMessage() {
@@ -58,6 +80,39 @@ export default {
                     id: this.currentUser.uid
                 }
             }
+        },
+        uploadFile(file, metadata) {
+            if (file === null) return false
+            // const pathToUpload = this.currentChannel.id
+            // const ref = this.$parent.getMessagesRef()
+            const filePath = this.getPath() + '/' + uuidV4() + '.jpg'
+
+            // upload to Firebase storegae
+            this.uploadTask = this.storageRef.child(filePath).put(file, metadata)
+            this.uploadState = 'uploading'
+
+            this.uploadTask.on('state_changed', (snap) => {
+                // status
+                const percent = (snap.bytesTransferred / snap.totalBytes) * 100
+                $('#uploadedFile').progress('set percent', percent)
+            }, (error) => {
+                console.log(error)
+                // error
+            }, () => {
+                // finish
+            })
+            return true
+        },
+        openFileModal() {
+            /* global $ */
+            /* eslint no-undef: "error" */
+            $('#fileModal').modal('show')
+        },
+        getPath() {
+            if (this.isPrivate) {
+                return 'tchat/private/' + this.currentChannel.id
+            }
+            return 'tchat/public'
         }
     }
 }
