@@ -40,6 +40,9 @@
             "content": {
               ".validate": "newData.val().length > 0"
             },
+             "image": {
+               ".validate": "newData.val().length > 0"
+             },
               "user": {
                 ".validate": "newData.hasChildren(['name', 'avatar', 'id'])",
                   "id": {
@@ -55,10 +58,13 @@
           ".read": "auth != null && ($uid1 === auth.uid || $uid2 === auth.uid)",
           "$messageId": {
             ".write": "auth != null && newData.child('user/id').val() === auth.uid",
-            ".validate": "$uid1 < $uid2 && newData.hasChildren(['content', 'user', 'timestamp'])",
+            ".validate": "$uid1 < $uid2 && (newData.hasChildren(['content', 'user', 'timestamp']) && !newData.hasChildren(['image'])) || (newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
              "content": {
               ".validate": "newData.val().length > 0"
             },
+            "image": {
+               ".validate": "newData.val().length > 0"
+             },
             "user": {
               ".validate": "newData.hasChildren(['name', 'avatar', 'id'])",
                 "id": {
@@ -103,12 +109,13 @@ service firebase.storage {
       }
 
       match /private/{user1}/{user2}/{imagePath=**} {
-      	allow read: if request.auth != null;
-        allow write: if request.auth != null && request.resource.contentType.matches('image/.*') && request.resource.size < 1 * 1024 * 1024;
+      	allow read: if request.auth != null && (request.auth.uid == $user1 || request.auth.uid == $user2);
+        allow write: if request.auth != null && (request.auth.uid == $user1 || request.auth.uid == $user2) && request.resource.contentType.matches('image/.*') && request.resource.size < 1 * 1024 * 1024;
       }
     }
   }
 }
+
 
 ```
 

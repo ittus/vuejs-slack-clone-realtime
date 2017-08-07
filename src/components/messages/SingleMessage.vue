@@ -12,7 +12,7 @@
                 {{ message.content }}
             </div>
 
-            <img class="ui image content__image" :src="message.image" alt="image">
+            <img class="ui image content__image" :src="message.image" alt="image" v-else>
         </div>
     </div>
 </template>

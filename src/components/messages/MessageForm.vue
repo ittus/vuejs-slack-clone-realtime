@@ -11,7 +11,8 @@
 
               <div class="field">
                   <button class="ui green button" @click.prevent="sendMessage">Send</button>
-                  <button class="ui labeled icon button" @click.prevent="openFileModal">
+                  <button class="ui labeled icon button" @click.prevent="openFileModal"
+                      :class="{'disabled': uploadState == 'uploading'}">
                       <i class="cloud upload icon"></i>Upload
                   </button>
               </div>
@@ -19,7 +20,7 @@
       </div>
 
       <!--  Process bar upload file -->
-      <div class="ui small orange inverted progress" data-total="100" id="uploadedFile">
+      <div class="ui small orange inverted progress" data-total="100" id="uploadedFile" v-if="uploadState != null">
           <div class="bar">
               <div class="progress">
 
@@ -135,7 +136,7 @@ export default {
                 this.$nextTick(() => {
                     /* global $ */
                     /* eslint no-undef: "error" */
-                    $('html, body').scrollTop($(document).height)
+                    $('html, body').scrollTop($(document).height())
                 })
             })
             .catch((error) => {
