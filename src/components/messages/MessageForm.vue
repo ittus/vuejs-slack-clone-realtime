@@ -26,9 +26,10 @@
               </div>
           </div>
           <div class="label">
+              {{ uploadLabel }}
           </div>
       </div>
-      <file-modal></file-modal>
+      <file-modal ref='file_modal'></file-modal>
   </div>
 </template>
 
@@ -53,7 +54,19 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['currentChannel', 'currentUser', 'isPrivate'])
+        ...mapGetters(['currentChannel', 'currentUser', 'isPrivate']),
+        uploadLabel() {
+            switch (this.uploadState) {
+            case 'uploading':
+                return 'Uploading...'
+            case 'error':
+                return 'Error...'
+            case 'done':
+                return 'Upload successfully'
+            default:
+                return ''
+            }
+        }
     },
     methods: {
         sendMessage() {
@@ -72,9 +85,8 @@ export default {
                 }
             }
         },
-        createMessage() {
-            return {
-                content: this.message,
+        createMessage(fileUrl = null) {
+            const message = {
                 timestamp: firebaseObj.database.ServerValue.TIMESTAMP,
                 user: {
                     name: this.currentUser.displayName,
@@ -82,11 +94,17 @@ export default {
                     id: this.currentUser.uid
                 }
             }
+            if (fileUrl === null) {
+                message.content = this.message
+            } else {
+                message.image = fileUrl
+            }
+            return message
         },
         uploadFile(file, metadata) {
             if (file === null) return false
-            // const pathToUpload = this.currentChannel.id
-            // const ref = this.$parent.getMessagesRef()
+            const pathToUpload = this.currentChannel.id
+            const ref = this.$parent.getMessageRef()
             const filePath = this.getPath() + '/' + uuidV4() + '.jpg'
 
             // upload to Firebase storegae
@@ -98,12 +116,31 @@ export default {
                 const percent = (snap.bytesTransferred / snap.totalBytes) * 100
                 $('#uploadedFile').progress('set percent', percent)
             }, (error) => {
-                console.log(error)
+                this.errors.push(error.message)
+                this.uploadState = 'error'
+                this.uploadTask = null
                 // error
             }, () => {
                 // finish
+                this.uploadState = 'done'
+                this.$refs.file_modal.resetForm()
+
+                const fileUrl = this.uploadTask.snapshot.downloadURL
+                this.sendFileMessage(fileUrl, ref, pathToUpload)
             })
             return true
+        },
+        sendFileMessage(fileUrl, ref, pathToUpload) {
+            ref.child(pathToUpload).push().set(this.createMessage(fileUrl)).then(() => {
+                this.$nextTick(() => {
+                    /* global $ */
+                    /* eslint no-undef: "error" */
+                    $('html, body').scrollTop($(document).height)
+                })
+            })
+            .catch((error) => {
+                this.errors.push(error.message)
+            })
         },
         openFileModal() {
             /* global $ */
@@ -115,6 +152,12 @@ export default {
                 return 'tchat/private/' + this.currentChannel.id
             }
             return 'tchat/public'
+        }
+    },
+    beforeDestroy() {
+        if (this.uploadTask !== null) {
+            this.uploadTask.cancel()
+            this.uploadTask = null
         }
     }
 }

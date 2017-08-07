@@ -8,9 +8,11 @@
             <div class="metadata">
                 <span class="date comment__date">{{ message.timestamp | fromNow }}</span>
             </div>
-            <div class="text">
+            <div class="text" v-if="!isFile(message)">
                 {{ message.content }}
             </div>
+
+            <img class="ui image content__image" :src="message.image" alt="image">
         </div>
     </div>
 </template>
@@ -28,6 +30,9 @@ export default {
     methods: {
         selfMessage(user) {
             return user.id === this.currentUser.uid
+        },
+        isFile(message) {
+            return message.content == null && message.image != null
         }
     },
     filters: {

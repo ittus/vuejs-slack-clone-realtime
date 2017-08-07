@@ -36,7 +36,7 @@
         ".validate": "root.child('channels/' + $channelId).exists()",
         "$messageId": {
           	".write": "auth != null",
-            ".validate": "newData.hasChildren(['content', 'user', 'timestamp'])",
+            ".validate": "(newData.hasChildren(['content', 'user', 'timestamp']) && !newData.hasChildren(['image'])) || (newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
             "content": {
               ".validate": "newData.val().length > 0"
             },
@@ -99,16 +99,17 @@ service firebase.storage {
     match /tchat {
     	match /public/{imagePath=**} {
       	allow read: if request.auth != null;
-        allow write: if request.auth != null;
+        allow write: if request.auth != null && request.resource.contentType.matches('image/.*') && request.resource.size < 1 * 1024 * 1024;
       }
 
       match /private/{user1}/{user2}/{imagePath=**} {
       	allow read: if request.auth != null;
-        allow write: if request.auth != null;
+        allow write: if request.auth != null && request.resource.contentType.matches('image/.*') && request.resource.size < 1 * 1024 * 1024;
       }
     }
   }
 }
+
 ```
 
 

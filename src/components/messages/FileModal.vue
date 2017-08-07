@@ -62,6 +62,13 @@ export default {
         isValid(fileName) {
             const index = this.authorized.indexOf(mime.lookup(fileName))
             return index !== -1
+        },
+        resetForm() {
+            /* global $ */
+            /* eslint no-undef: "error" */
+            $('.form').trigger('reset')
+            this.file = null
+            console.log('Reset form')
         }
     }
 }
