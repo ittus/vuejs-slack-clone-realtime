@@ -29,6 +29,7 @@ module.exports = {
     "comma-dangle": ["error", "never"],
     "prefer-template": 0,
     "no-shadow": 0,
+    "max-len": [2, {"code": 150, "tabWidth": 4, "ignoreUrls": true}],
     "no-param-reassign": 0,
     "no-console": process.env.NODE_ENV === 'production' ? 2 : 0,
     "import/prefer-default-export": ["off"],
