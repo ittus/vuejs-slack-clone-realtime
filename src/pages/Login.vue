@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="ui middle aligned center aligned grid login__container">
       <div class="column">
-        <h2 class="ui orange header">
+        <h2 class="ui main_header header">
           <div class="content">
             Login
           </div>
@@ -23,7 +23,7 @@
               </div>
             </div>
 
-            <div class="ui fluid large orange button" @click.prevent="login" :class="{ 'loading': isLoading }">Sign in</div>
+            <div class="ui fluid large sucess_btn button" @click.prevent="login" :class="{ 'loading': isLoading }">Sign in -></div>
           </div>
 
           <div class="ui error message" v-if="hasErrors">
@@ -82,7 +82,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../main.scss';
+
 .login__container {
     margin-top: 40px;
 }

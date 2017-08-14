@@ -19,7 +19,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+@import '../../main.scss';
 
 .sidebar {
     position: fixed;
@@ -30,7 +31,7 @@ export default {
     top: 0;
     left: 0;
     bottom: 0;
-    background-color: #795548;
+    background-color: $color_matterhorn;
     padding-top: 110px;
 }
 </style>

@@ -3,6 +3,7 @@
 > Slack clone real time Using VueJS and Firebase
 # Demo
 https://slackclonevuejs.firebaseapp.com
+![Demo Image](images/screenshot1.png)
 
 # Technology
 - VueJS

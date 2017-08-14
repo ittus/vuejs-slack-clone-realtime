@@ -1,9 +1,9 @@
 <template lang="html">
     <div class="users__container">
-        <h2 class="ui inverted center aligned header">Users</h2>
+        <h2 class="listings_header">Users</h2>
         <div class="ui feed" v-for="user in users"
             :key="user.uid"
-            :class="{'is_active': isActive(user)}"
+            :class="{'is_active': isActive(user), 'has_unread': getNotification(user) > 0}"
             @click.prevent="changeChannel(user)">
             <div class="event">
                 <div class="label">
@@ -14,7 +14,7 @@
                     :class="{'olive': isOnline(user), 'red': !isOnline(user)}">
                     </span>
                     {{ user.name }}
-                    <div class="ui white label channel__count" v-if="getNotification(user ) >= 1">
+                    <div class="ui label unread channel__count" v-if="getNotification(user ) >= 1">
                         {{ getNotification(user)  }}
                     </div>
                 </div>
@@ -165,9 +165,12 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+@import '../../main.scss';
+
     .users__container {
         overflow-y: auto;
+        color: $color_shady_lady;
     }
 
     .users__container .feed {
@@ -177,10 +180,6 @@ export default {
     }
 
     .users__container .feed:hover {
-        background: #654439;
-    }
-
-    .users__container .feed:is_active {
         background: #654439;
     }
 

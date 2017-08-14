@@ -1,8 +1,8 @@
 <template lang="html">
     <div class="messages__container">
         <div class="messages__content">
-            <h2 class="ui inverted center aligned header">{{ channelName }}</h2>
-            <div class="ui segment">
+            <h2 class="ui inverted channel_header">{{ channelName }}</h2>
+            <div class="ui">
                 <div class="ui comments">
                     <!--  Single message -->
                     <transition-group tag="div" name="list">
@@ -114,7 +114,6 @@ export default {
 <style lang="css" scoped>
     .messages__container {
         position: relative;
-        background-color: #2a2a2e;
         padding: 10px 30px 210px 30px;
         margin-left: 300px;
         min-height: 100%;
@@ -131,6 +130,15 @@ export default {
     .list-enter, .list-leave-to {
         opacity: 0;
         transform: translateX(30px);
+    }
+    .channel_header {
+        display: inline-block;
+        padding: 0 .5rem 0 1.5rem;
+        color: $color_scarpa_flow;
+        font-size: 1.4rem;
+        font-weight: 900;
+        line-height: 53px;
+        cursor: pointer;
     }
 
 </style>

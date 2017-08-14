@@ -1,15 +1,15 @@
 <template lang="html">
     <div class="channels__container">
-        <h2 class="ui inverted center aligned header"> Channels <i class="add square icon add_channel" @click="openChannelModal"></i></h2>
-        <div class="ui raised padded segment channels__list">
+        <h2 class="listings_header"> Channels <i class="add icon add_channel" @click="openChannelModal"></i></h2>
+        <div class="ui raised padded channels__list">
             <ul>
                 <li class="channels__item"
                     v-for="channel in channels"
                     :key="channel.id"
-                    :class="{'is_active': setChannelActive(channel)}"
+                    :class="{'is_active': setChannelActive(channel), 'has_unread': getNotification(channel) > 0}"
                     @click="changeChannel(channel)">
                     # {{ channel.name }}
-                    <div class="ui label purple channel__count" v-if="getNotification(channel) > 0 && (channel.id !== currentChannel.id)">
+                    <div class="ui label unread channel__count" v-if="getNotification(channel) > 0 && (channel.id !== currentChannel.id)">
                         {{ getNotification(channel) }}
                     </div>
                 </li>
@@ -164,11 +164,14 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-    .channels_list {
+<style lang="scss" scoped>
+@import '../../main.scss';
+
+    .channels__list {
         min-height: 100px;
         max-height: 300px !important;
         overflow-y: auto !important;
+        color: $color_shady_lady;;
     }
 
     .channels__container ul {
@@ -177,35 +180,33 @@ export default {
     }
 
     .channels__item {
-        height: 30px;
-        margin: 8px;
         list-style: none;
-        background-color: #ca67ff;
         cursor: pointer;
         line-height: 30px;
         border-radius: 2px;
         padding-left: 12px;
-        font-weight: bold;
         font-size: 1.1em;
+        margin: 1px 0;
     }
 
     .channel__count {
         float: right;
     }
 
-    .is_active {
-        background-color: #9740c5;
-    }
-
     .channels__item:hover {
-        background-color: #9740c5;
+        background-color: $color_smalt_blue;
     }
 
     .add_channel {
         cursor: pointer;
-        color: #8BC34A;
+        color: $white;
+        position: absolute;
+        right: -65%;
+        opacity: 0.6;
+        top: 5%;
+        display: inline-block;
     }
     .add_channel:hover {
-        color: #689F38;
+        color: $white;
     }
 </style>

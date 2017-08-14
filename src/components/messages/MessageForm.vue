@@ -1,22 +1,23 @@
 <template lang="html">
   <div class="messages__form">
       <div class="ui inverted form">
-          <div class="two fields">
+          <form class="two fields" v-on:submit.prevent="sendMessage">
               <div class="field">
                   <textarea name="message" id="message"
+                  @keyup.enter.native="sendMessage"
                   v-model.trim="message"
                   rows="3"
                   placeholder="Message"></textarea>
               </div>
 
               <div class="field">
-                  <button class="ui green button" @click.prevent="sendMessage">Send</button>
+                  <button type="submit" class="ui green button" @click.prevent="sendMessage">Send</button>
                   <button class="ui labeled icon button" @click.prevent="openFileModal"
                       :class="{'disabled': uploadState == 'uploading'}">
                       <i class="cloud upload icon"></i>Upload
                   </button>
               </div>
-          </div>
+          </form>
       </div>
 
       <!--  Process bar upload file -->
@@ -76,7 +77,7 @@ export default {
                     this.$parent.getMessageRef().child(this.currentChannel.id).push()
                     .set(this.createMessage())
                     .then(() => {
-                        // console.log('success')
+                        this.message = ''
                     })
                     .catch((error) => {
                         this.errors.push(error.message)

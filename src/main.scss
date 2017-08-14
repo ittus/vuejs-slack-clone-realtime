@@ -1,0 +1,55 @@
+$color_matterhorn: #4d394b;
+$color_masala: #3e313c;
+$color_blackcurrant: #372c36;
+$color_smalt_blue: #4c9689;
+$color_scarpa_flow: #555459;
+$white: #ffffff;
+$color_shady_lady: #ab9ba9;
+$color_mandy: #eb4d5c;
+$night: rgba(0, 0, 0, 0.2);
+
+.listings_header {
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.25rem;
+    margin: 0 1rem .1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $color_shady_lady;
+    width: 165px;
+    position: relative;
+}
+
+.unread {
+	color: $white;
+	background: $color_mandy;
+	border-radius: 9px;
+	padding: 2px 9px;
+	font-weight: 700;
+    line-height: 14px;
+	vertical-align: baseline;
+	white-space: nowrap;
+	text-shadow: 0 1px 0 $night;
+	float: right;
+	margin-right: 3px;
+	margin-top: 3px;
+}
+
+.has_unread {
+    color: $white;
+    font-weight: bold;
+}
+
+.is_active {
+    background-color: $color_smalt_blue;
+    color: $white;
+}
+
+.sucess_btn {
+    background-color: $color_smalt_blue;
+    color: $white;
+}
+
+.main_header {
+    color: $color_smalt_blue;
+}

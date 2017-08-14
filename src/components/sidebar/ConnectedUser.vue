@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="connectedUser__container">
-        <div class="ui items">
+        <div class="ui items user_component">
             <div class="item">
                 <div class="ui mini image">
                     <img :src="currentUser.photoURL" alt="avatar">
@@ -12,7 +12,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="extra">
+                <div>
                     <button class="ui circular icon right floated button" @click="logout">
                         <i class="icon sign out"></i>
                     </button>
@@ -47,16 +47,23 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+@import '../../main.scss';
+
 .connectedUser__container {
     position: absolute;
-    background-color: #3e2a23;
+    background-color: $color_masala;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     height: 90px;
     padding: 8px;
-    box-shadow: -4px 1px 8px 3px #2b1d18;
+    box-shadow: -4px 1px 8px 3px $color_blackcurrant;
 }
+
+.user_component {
+    padding-top: 10px;
+}
+
 </style>
