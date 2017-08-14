@@ -91,7 +91,7 @@ export default {
                     ref.set(true)
                     ref.onDisconnect().remove((err) => {
                         if (err !== null) {
-                            console.log(err)
+                            // console.log(err)
                         }
                     })
                 }
@@ -130,7 +130,6 @@ export default {
         },
         isActive(user) {
             const channelId = this.getChannelId(user.uid)
-            console.log(this.currentChannel.id, channelId)
             return this.currentChannel.id === channelId
         },
         getChannelId(userId) {

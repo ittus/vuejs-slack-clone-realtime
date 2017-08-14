@@ -98,7 +98,6 @@ export default {
             // }
         },
         getMessageRef() {
-            console.log('isPrivate', this.isPrivate)
             if (this.isPrivate) {
                 return this.privateMessagesRef
             }

@@ -92,12 +92,10 @@ export default {
                             this.$router.push('/')
                         })
                     }, (error) => {
-                        console.log(error)
                         this.errors.push(error.message)
                         this.isLoading = false
                     })
                 }).catch((error) => {
-                    console.error(error)
                     this.errors.push(error.message)
                     this.isLoading = false
                 })

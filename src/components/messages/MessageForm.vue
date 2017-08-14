@@ -73,14 +73,12 @@ export default {
         sendMessage() {
             if (this.currentChannel !== null) {
                 if (this.message.length > 0) {
-                    console.log('sendMessage', this.currentChannel.id)
                     this.$parent.getMessageRef().child(this.currentChannel.id).push()
                     .set(this.createMessage())
                     .then(() => {
-                        console.log('success')
+                        // console.log('success')
                     })
                     .catch((error) => {
-                        console.error(error.message)
                         this.errors.push(error.message)
                     })
                 }

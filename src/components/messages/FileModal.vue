@@ -43,7 +43,6 @@ export default {
     methods: {
         addFile(e) {
             const files = e.target.files
-            console.log(files)
             if (files.length === 1) {
                 this.file = files[0]
             }
@@ -68,7 +67,6 @@ export default {
             /* eslint no-undef: "error" */
             $('.form').trigger('reset')
             this.file = null
-            console.log('Reset form')
         }
     }
 }
